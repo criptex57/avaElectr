@@ -56,7 +56,7 @@ void loop() {
       bmp_temp->getEvent(&temp_event);
       bmp_pressure->getEvent(&pressure_event);
     
-      String serverPath = serverName + "?hash="+hash+"&temp="+temp_event.temperature+"&pressure="+pressure_event.pressure;
+      String serverPath = serverName + "?action=sendFromESP&hash="+hash+"&temp="+temp_event.temperature+"&pressure="+pressure_event.pressure;
       Serial.println(serverPath);
       http.begin(client, serverPath.c_str());
       int httpResponseCode = http.GET();
