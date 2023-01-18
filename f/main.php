@@ -15,7 +15,7 @@ class Main {
         $this->requests = new requests();
     }
 
-    public function update(){
+    public function getMessageFromBot(){
         $updateId = $this->db->getLastUpdate();
         $response = $this->requests->getUpdates($updateId);
 
@@ -55,7 +55,11 @@ class Main {
                                     $this->requests->sendGraph($message['message']['from']['id'], true);
                                     break;
                                 case '/getbarorange':
-                                    $this->requests->sendGraph($message['message']['from']['id'], true, ['lasthour' => true]);
+                                    $this->requests->sendGraph(
+                                        $message['message']['from']['id'],
+                                        false,
+                                        ['from' => date('Y-m-d' , strtotime('-1 week')), 'to' =>  date('Y-m-d')]
+                                    );
                                     break;
                             }
                         }
@@ -67,7 +71,7 @@ class Main {
         }
     }
 
-    public function checkESP(){
+    public function checkLastEspRequest(){
         if($this->db->isOldEspReq()){
             $allSubscribers = $this->db->getSubscribers();
 
@@ -91,7 +95,7 @@ class Main {
         }
     }
 
-    public function sendFromESP(){
+    public function createEspRequest(){
         if($_GET && isset($_GET['hash']) && $_GET['hash'] == self::$hash){
             if($this->db->isOldEspReq()){
                 $allSubscribers = $this->db->getSubscribers();

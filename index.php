@@ -15,12 +15,15 @@ elseif(isset($_SERVER['argv']) && isset($_SERVER['argv'][1])){
 
 switch ($action){
     case 'sendFromESP':
-        $main->sendFromESP();
-        break;
-    case 'getBotUpdate':
-        $main->update();
+        $main->createEspRequest(); //Запрос с ESP
         break;
     case 'checkEspMess':
-        $main->checkESP();
+        $main->checkLastEspRequest(); //Проверить как давно были запросы с ESP
+        break;
+    case 'getBotUpdate':
+        $main->getMessageFromBot(); //Получить новые сообщения от бота
+        break;
+    case 'getGraph':
+        $main->getGraph(); //Получить картинку с графиком
         break;
 }
