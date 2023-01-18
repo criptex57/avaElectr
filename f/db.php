@@ -116,10 +116,35 @@ class db {
         return $result;
     }
 
-    public function createEspRequest($value){
-        $query = "INSERT INTO requestsFromEsp (`baro`) VALUES ('".$value."')";
+    public function createEspRequest($temp = null, $pressure = null){
+        print_r([$temp, $pressure]);
+        $query = "INSERT INTO requestsFromEsp (`baro`, `temp`) VALUES ('".(string)$pressure."', '".(string)$temp."')";
         $this->dbConnection->query($query);
         return $this->dbConnection->insert_id;
+    }
+
+    public function getEspRequests($from = false, $to = false){
+        if(!$from){
+            $from = date('Y-m-d H:i:s', strtotime('-1 day'));
+        }
+
+        if(!$to){
+            $to = date('Y-m-d H:i:s', time()) ;
+        }
+
+        $query = "SELECT * FROM requestsFromEsp WHERE created > '$from' AND created < '$to'";
+
+
+        $data = $this->dbConnection->query($query);
+        $response = [];
+
+        if($data->num_rows > 0){
+            foreach ($data as $datum) {
+                $response[] = $datum;
+            }
+        }
+
+        return $response;
     }
 
     public function getLastEspRequest(){

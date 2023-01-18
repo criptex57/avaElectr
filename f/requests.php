@@ -40,6 +40,28 @@ class requests {
         return $response;
     }
 
+    public function sendGraph($chatId, $getTemp = false, $params = []){
+        $addr = $this->host."sendPhoto";
+        $imageUrl = 'https://crip.pp.ua/tg.jpeg?microtime='.microtime();
+
+        if($getTemp){
+            $imageUrl .= '&temp=true';
+        }
+
+        if($params){
+            foreach ($params as $key => $param){
+                $imageUrl .= "&$key=$param";
+            }
+        }
+
+        $response = $this->sendRequest($addr, [
+            'chat_id' => $chatId,
+            'photo' => $imageUrl
+        ]);
+
+        return json_decode($response, true);
+    }
+
     public function getUpdates($updateId){
         $addr = $this->host."getUpdates";
 
