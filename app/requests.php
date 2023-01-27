@@ -7,6 +7,27 @@ class requests {
         $this->db = new db;
     }
 
+    public function getWeather($date){
+        $weatherLink = "https://sinoptik.ua/%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0-%D0%BF%D0%B5%D1%80%D0%B2%D0%BE%D0%BC%D0%B0%D0%B9%D1%81%D0%BA-303020105/$date?ajax=GetForecast";
+        return $this->sendRequest($weatherLink);
+    }
+
+    public function sendMessageToAll($text){
+        $subscribers = $this->db->getSubscribers();
+
+        if($subscribers){
+            foreach ($subscribers as $subscriber){
+                if(isset($subscriber['status']) && $subscriber['status'] == db::$subscribersStatus['enable']){
+                    if($subscriber['telegramId'] != '464928895'){
+                       //continue; //dev
+                    }
+
+                    $this->sendMessage($text, $subscriber['telegramId']);
+                }
+            }
+        }
+    }
+
     public function sendMessage($text, $userId, $type = 'message'){
         $addr = $this->host."sendMessage";
 
